@@ -9,7 +9,7 @@ class App extends Component {
       { id: 1, value: 0 },
       { id: 2, value: 0 },
       { id: 3, value: 0 },
-      { id: 4, value: 0 }
+      { id: 4, value: 0 },
     ]
   };
 
@@ -36,6 +36,15 @@ class App extends Component {
     this.setState({ counters });
   };
 
+  handleAdd = (length) => {
+    const counters = [...this.state.counters];
+    const index = length;
+    counters[index] = {...counters[length-1]};
+    console.log(counters[index].id, counters[length].id);
+    counters[index].id++;
+    console.log(counters[index].id, counters[length].id);
+  };
+
 
   render() { 
     return ( 
@@ -46,6 +55,7 @@ class App extends Component {
             counters={this.state.counters}
             onReset={this.handleReset}
             onDelete={this.handleDelete}
+            onAdd={this.handleAdd}
             onIncrement={this.handleIncrement} />
         </main>
       </React.Fragment>
