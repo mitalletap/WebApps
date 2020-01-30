@@ -6,51 +6,85 @@ import FlightData from './data/flightData.json'
 const params = {
   access_key: '03ce07bbf3aec61d764a149b4be90037'
 }
-const URL = "https://cors-anywhere.herokuapp.com/http://api.aviationstack.com/v1/flights";
+const Kparams = {
+  'x-rapidapi-host': 'https://cors-anywhere.herokuapp.com/http://api.aviationstack.com/v1/flights',
+  'x-rapidapi-key': '03ce07bbf3aec61d764a149b4be90037'
+}
+const URL = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2020-02-01?";
+const KURL = "https://cors-anywhere.herokuapp.com/http://api.aviationstack.com/v1/flights";
 class App extends Component {
-  state = {
-    isLoading: true,
-    f: []
-  };
-
+  constructor(props){
+    super(props)
+    this.state = {
+      Quotes: [],
+      Places: [],
+      Carriers: [],
+      Currencies: []
+    }
+  }
   componentDidMount() {
     console.log("Pre")
-    axios.request({
-      url: 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2020-02-01?',
-      method: 'get',
+  //   axios.request({
+  //     url: 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2020-02-01?',
+  //     method: 'get',
+  //     headers: {
+  //       'x-rapidapi-key': 'c25f6b34acmsh3e88e6211d976dcp1b322cjsn2b02ff0fa923'
+  //     }
+  //   })
+  //   .then(res => console.log(res.data.Quotes[0].MinPrice))
+  //   .then((response) => {
+  //     console.log(response.data.Quotes)
+  //     console.log(response.Quotes[0].QuoteId)
+  //     console.log(response.Places)
+  //     console.log(response.Carriers)
+  //     console.log(response.Currencies)
+  //   });
+  // }
+    fetch(URL, { 
       headers: {
+        'x-rapidapi-host': 'skyscanner-skyscanner-flight-search-v1.p.rapidapi.com',
         'x-rapidapi-key': 'c25f6b34acmsh3e88e6211d976dcp1b322cjsn2b02ff0fa923'
       }
-    }).then(response =>
-      response.data.results.map(flightData => ({
-        f: `${flightData.data}`
-      }))
-      
-    )
-      .catch(error => this.setState({ error, isLoading: false }));
-    //.then(res => console.log(res.data.Quotes[0].MinPrice));
+    })
+    .then(response => response.json())
+    .then((response) => {
+      console.log(response.Quotes)
+      console.log(response.Quotes[0].QuoteId)
+      console.log(response.Places)
+      console.log(response.Carriers)
+      console.log(response.Currencies)
+    })
   }
 
   render() {
+    const {Quotes, Places, Carriers, Currencies} = this.state;
     return (
       <React.Fragment>
-        {!this.state.isLoading ? (
-          this.state.f.map(f => {
-            const { quotes, place, carrier, currency } = f;
-            return (
-              <div>
-                <p>Name: {f.quotes.quoteid}</p>
-                <p>Email Address: {place}</p>
-                <p>Name: {carrier}</p>
-                <p>Email Address: {currency}</p>
-                <hr />
-              </div>
-            );
-          })
-          // If there is a delay in data, let's let the user know it's loading
-        ) : (
-            <h3>Loading...</h3>
-          )}
+      <div>
+        <p>Email Address: {Places.PlaceId} + "End"</p>
+        <p>Name: {Carriers.CarrierId}</p>
+        <p>Email Address: {Currencies.Code}</p>
+      </div>
+      <ul>
+        {Quotes.map(Quotes =>
+          <li> {Quotes.QuoteId}</li>
+        )}
+      </ul>
+      <ul>
+        {Places.map(Places =>
+          <li>{Places.Placeid}</li>
+        )}
+      </ul>
+      <ul>
+        {Carriers.map(Carriers =>
+          <li>{Carriers.QuoteId}</li>
+        )}
+      </ul>
+      <ul>
+        {Currencies.map(Currencies =>
+          <li> {Currencies.QuoteId}</li>
+        )}
+      </ul>
       </React.Fragment>
     );
   }
