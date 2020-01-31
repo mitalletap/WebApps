@@ -1,151 +1,134 @@
+
 import React, { Component } from 'react';
-import axios from 'axios'
-import Flights from './components/flights';
-import FlightData from './data/flightData.json'
-/*http://api.aviationstack.com/v1/flights?access_key=03ce07bbf3aec61d764a149b4be90037*/
-const params = {
-  access_key: '03ce07bbf3aec61d764a149b4be90037'
-}
-const Kparams = {
-  'x-rapidapi-host': 'https://cors-anywhere.herokuapp.com/http://api.aviationstack.com/v1/flights',
-  'x-rapidapi-key': '03ce07bbf3aec61d764a149b4be90037'
-}
+import LargeTable from './components/DataTable';
+import 'typeface-roboto';
+import { Table } from 'rsuite';
+const { Column, HeaderCell, Cell, Pagination } = Table;
+
 const URL = "https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2020-02-01?";
-const KURL = "https://cors-anywhere.herokuapp.com/http://api.aviationstack.com/v1/flights";
+
 class App extends Component {
-  constructor(props){
-    super(props)
+  constructor() {
+    super();
     this.state = {
       Quotes: [],
       Places: [],
       Carriers: [],
       Currencies: []
     }
+    this.getData()
   }
-  componentDidMount() {
-    console.log("Pre")
-  //   axios.request({
-  //     url: 'https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browsequotes/v1.0/US/USD/en-US/SFO-sky/JFK-sky/2020-02-01?',
-  //     method: 'get',
-  //     headers: {
-  //       'x-rapidapi-key': 'c25f6b34acmsh3e88e6211d976dcp1b322cjsn2b02ff0fa923'
-  //     }
-  //   })
-  //   .then(res => console.log(res.data.Quotes[0].MinPrice))
-  //   .then((response) => {
-  //     console.log(response.data.Quotes)
-  //     console.log(response.Quotes[0].QuoteId)
-  //     console.log(response.Places)
-  //     console.log(response.Carriers)
-  //     console.log(response.Currencies)
-  //   });
-  // }
-    fetch(URL, { 
+  
+  getData(){
+    let data = fetch(URL, { 
       headers: {
         'x-rapidapi-host': 'skyscanner-skyscanner-flight-search-v1.p.rapidapi.com',
         'x-rapidapi-key': 'c25f6b34acmsh3e88e6211d976dcp1b322cjsn2b02ff0fa923'
       }
-    })
-    .then(response => response.json())
-    .then((response) => {
-      console.log(response.Quotes)
-      console.log(response.Quotes[0].QuoteId)
-      console.log(response.Places)
-      console.log(response.Carriers)
-      console.log(response.Currencies)
-    })
+    }).then((resp) => {
+      resp.json().then((res) => {
+        // console.log(res.Quotes);
+        // console.log(res.Places);
+        // console.log(res.Carriers);
+        // console.log(res.Currencies[0].Code);
+        this.setState({Quotes: res.Quotes , Places: res.Places , Carriers: res.Carriers , Currencies: res.Currencies})
+      })
+    });
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   render() {
     const {Quotes, Places, Carriers, Currencies} = this.state;
+    const data = {Quotes, Places, Carriers, Currencies};
+    const qData = Quotes;
+
+
+
+
+
+
+
+
+    console.log(data);
     return (
       <React.Fragment>
-      <div>
-        <p>Email Address: {Places.PlaceId} + "End"</p>
-        <p>Name: {Carriers.CarrierId}</p>
-        <p>Email Address: {Currencies.Code}</p>
-      </div>
-      <ul>
-        {Quotes.map(Quotes =>
-          <li> {Quotes.QuoteId}</li>
-        )}
-      </ul>
-      <ul>
-        {Places.map(Places =>
-          <li>{Places.Placeid}</li>
-        )}
-      </ul>
-      <ul>
-        {Carriers.map(Carriers =>
-          <li>{Carriers.QuoteId}</li>
-        )}
-      </ul>
-      <ul>
-        {Currencies.map(Currencies =>
-          <li> {Currencies.QuoteId}</li>
-        )}
-      </ul>
+        <LargeTable passedData={this.state.Quotes}></LargeTable>
+
+
+
+        {/* <h1> TABLE </h1>
+      <h4> 
+        {this.state.Quotes ?  this.state.Quotes.map((item) => 
+          <p> Min Price : {item.MinPrice} </p>
+          ) : <p> Loading.....</p>}
+      </h4>
+      <h4> 
+        {this.state.Places ?  this.state.Places.map((item) => 
+          <p> City : {item.Name} </p>
+          ) : <p> Loading.....</p>}
+      </h4>
+      <h4> 
+        {this.state.Carriers ?  this.state.Carriers.map((item) => 
+        <p> Airliner : {item.Name} </p>
+        ) : <p> Loading.....</p>}
+      </h4>
+      <h4> 
+        {this.state.Currencies ?  this.state.Currencies.map((item) => 
+        <p> Currency {item.Code} </p>
+        ) : <p> Loading.....</p>}
+      </h4> */}
       </React.Fragment>
     );
   }
 }
+
+
+
+
 export default App; 
 
 
 /*
-import React, { Component } from 'react';
-import axios from 'axios'
-import Flights from './components/flights';
-const params = {
-  access_key: '03ce07bbf3aec61d764a149b4be90037'
-}
-
-const URL = "https://cors-anywhere.herokuapp.com/http://api.aviationstack.com/v1/flights";
-
-class App extends Component {
-  state = {
-    f: []
-  };
-
-  componentDidMount() {
-    axios.get(URL, { params })
-      .then(res => {
-        const flights = res.data;
-        this.setState({ f: flights.data });
-        console.log(flights.data);
-      })
-  }
-
-  render() {
-    return (
-      <div>
-        <center><h1> Flights </h1></center>
-        {this.state.f.map(function (flight) {
-          return (
-            <div>
-              <a>
-                {flight.departure.airport}
-              </a>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-}
-export default App;
-*/
 
 
-/*
-render() {
-    return (
-      <div>
-        <h1>Hello There</h1>
-        {FlightData.map((flightDetail, index) => {
-          return <h1>{flightDetail.Quotes[index].QuoteId}</h1>
-        })}
-     </div>
-    );
-  }
-*/
+      <React.Fragment>
+        <LargeTable quoteData={this.state.Quotes.QuoteId}></LargeTable>
+      <h1> 
+        {this.state.Quotes ?  this.state.Quotes.map((item) => 
+          <p> Min Price : {item.MinPrice} </p>
+          ) : <p> Loading.....</p>}
+      </h1>
+      <h1> 
+        {this.state.Places ?  this.state.Places.map((item) => 
+          <p> City : {item.Name} </p>
+          ) : <p> Loading.....</p>}
+      </h1>
+      <h1> 
+        {this.state.Carriers ?  this.state.Carriers.map((item) => 
+        <p> Airliner : {item.Name} </p>
+        ) : <p> Loading.....</p>}
+      </h1>
+      <h1> 
+        {this.state.Currencies ?  this.state.Currencies.map((item) => 
+        <p> Currency {item.Code} </p>
+        ) : <p> Loading.....</p>}
+      </h1>
+      </React.Fragment>
+
+      */
+
